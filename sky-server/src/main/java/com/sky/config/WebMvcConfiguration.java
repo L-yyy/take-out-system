@@ -1,10 +1,15 @@
 package com.sky.config;
 
 import com.sky.interceptor.JwtTokenAdminInterceptor;
+import com.sky.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.cbor.MappingJackson2CborHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -15,12 +20,16 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.util.List;
+
 /**
  * 配置类，注册web层相关组件
  */
 @Configuration
 @Slf4j
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
+    //web层的配置类一般都会去继承WebMvcConfigurationSupport这个配置类，
+    //现在要扩展Spring MVC框架的消息转化器，新增extendMessageConverters方法
 
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
@@ -65,4 +74,20 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
+
+    /**
+     * 扩展Spring MVC框架的消息转化器
+     * @param converters
+     */                                                   //这里的converters容器里面装了Spring MVC的所有消息转化器
+    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters){
+        log.info("扩展消息转化器...");
+        //创建一个消息转化器对象
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        //需要为消息转化器设置一个对象转化器，对象转化器可以将Java对象序列化为Json数据
+        converter.setObjectMapper(new JacksonObjectMapper());//这是提前准备好的
+        //将自己的消息转化器加入到converters容器中，但是外卖自己的转化器排在最后一个，使用不到(给他添加一个索引后就能优先使用了)
+        converters.add(0, converter);
+
+    }
+
 }

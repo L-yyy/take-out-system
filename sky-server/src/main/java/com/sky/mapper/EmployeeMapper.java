@@ -1,5 +1,7 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +26,13 @@ public interface EmployeeMapper {
             "values " +
             "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})")
     void insert(Employee employee);
+
+    /**
+     * 分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
+    //这里的类中Page是PageHelper提供的，他本质是一个List集合，
+    //这里的 方法名称 对应的是 映射文件的 id， 这里的 泛型 对应的是 映射文件的 返回值类型。
+    Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }
