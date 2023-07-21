@@ -11,4 +11,24 @@
         </where>
         order by create_time desc
     </select>
+
+<!--    这里可以直接写类名Employee(这里相当于别名)，不写前面的包路径，因为我们的配置文件已近扫描到entity这个实体类了-->
+<!--    这里本来只修改状态，但是为了后续更加方便，我们直接封装一个Empleyoo实体类来暂存要修改的数据，后续的修改可以直接使用这个映射来修改-->
+    <update id="update" parameterType="Employee">
+        update employee
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="idNumber != null">idNumber = #{idNumber},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="updateUser != null">updateUser = #{updateUser},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+
 </mapper>

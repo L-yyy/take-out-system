@@ -32,7 +32,13 @@ public interface EmployeeMapper {
      * @param employeePageQueryDTO
      * @return
      */
-    //这里的类中Page是PageHelper提供的，他本质是一个List集合，
-    //这里的 方法名称 对应的是 映射文件的 id， 这里的 泛型 对应的是 映射文件的 返回值类型。
+    //  这里的类中Page是PageHelper提供的，他本质是一个List集合，
+    //  这里的 方法名称 对应的是 映射文件的 id， 这里的 泛型 对应的是 映射文件的 返回值类型。
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+     * 修改员工状态
+     * @param employee
+     */
+    void update(Employee employee);
 }

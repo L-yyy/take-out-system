@@ -110,4 +110,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total, recodes);
     }
 
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //update employee set status = ? where id = ?
+
+        // 写法一:传统写法
+//        Employee employee = new Employee();
+//        employee.setStatus(status);
+//        employee.setId(id);
+
+        // 写法二: 使用 构建器 在实体类添加@Build注解
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+
+        employeeMapper.update(employee);
+    }
+
 }
