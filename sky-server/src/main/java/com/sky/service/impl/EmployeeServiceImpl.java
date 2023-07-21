@@ -96,6 +96,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
+    /**
+     * 员工分页查询显示
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         //引入pagehelp插件
@@ -110,6 +115,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total, recodes);
     }
 
+    /**
+     * 修改员工状态
+     * @param status
+     * @param id
+     */
     @Override
     public void startOrStop(Integer status, Long id) {
         //update employee set status = ? where id = ?
@@ -125,6 +135,37 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .id(id)
                 .build();
 
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        employee.setPassword("****");
+        return employee;
+    }
+
+    /**
+     * 修改员工信息
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        //我们传进来的是EmployeeDTO对象需要转换为Employee对象
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        //Employee对象内包括修改时间和人物，因此需要添加这两信息
+        employee.setUpdateTime(LocalDateTime.now());
+        //底层通过threadLocal来获取当前用户id，在拦截器校验JWT令牌的时候，我们已经设置好了当前用户id。(BaseContext是我们自己写的工具类)
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        //这里直接调用的前面修改状态写的灵活的映射文件，需要传入Employee对象
         employeeMapper.update(employee);
     }
 
