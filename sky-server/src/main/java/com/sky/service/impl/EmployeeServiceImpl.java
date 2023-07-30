@@ -85,13 +85,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置密码，使用MD5来加密
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        //设置当前记录创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        //设置当前记录创建人id和修改人id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        //设置当前记录创建时间和修改时间
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        //设置当前记录创建人id和修改人id
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
@@ -160,10 +160,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        //Employee对象内包括修改时间和人物，因此需要添加这两信息
-        employee.setUpdateTime(LocalDateTime.now());
-        //底层通过threadLocal来获取当前用户id，在拦截器校验JWT令牌的时候，我们已经设置好了当前用户id。(BaseContext是我们自己写的工具类)
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        //Employee对象内包括修改时间和人物，因此需要添加这两信息
+//        employee.setUpdateTime(LocalDateTime.now());
+//        //底层通过threadLocal来获取当前用户id，在拦截器校验JWT令牌的时候，我们已经设置好了当前用户id。(BaseContext是我们自己写的工具类)
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         //这里直接调用的前面修改状态写的灵活的映射文件，需要传入Employee对象
         employeeMapper.update(employee);

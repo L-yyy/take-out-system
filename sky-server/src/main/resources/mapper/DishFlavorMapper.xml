@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishFlavorMapper">
+
+    <insert id="insertBatch">
+        insert into dish_flavor (dish_id, name, value) VALUES
+#         使用动态SQL，这里的collection必须和传过来的形参一致,这里的动态sql每次遍历一个值后要使用separator添加一个逗号分隔开（虽然下面写的三个变量，但是每次只有一个在添加）
+        <foreach collection="flavors" item="df" separator=",">
+            (#{df.dishId}, #{df.name}, #{df.value})
+        </foreach>
+    </insert>
+</mapper>
