@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealDishMapper">
+
+    <select id="getSetmealIdsByDishIds" resultType="java.lang.Long">
+        select setmeal_id from setmeal_dish where dish_id in
+#         这里的collection写进来的形参名，separator是使用分隔符，open是开始遍历前添加，close是遍历结束后添加。效果：(1,2,3,4)
+        <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </select>
+</mapper>
