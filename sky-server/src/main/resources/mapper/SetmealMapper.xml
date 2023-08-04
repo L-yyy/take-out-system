@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+
+<!--    这里的useGeneratedKeys="true"表示执行完语句后返回刚才生成的主键的值（）-->
+<!--    这里的keyProperty="id"表示将我们传进来的对象的id赋值为返回的主键值（这里的id为Setmeal对象里面的id）-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal (category_id, name, price, status, description, image, create_time, update_time, create_user, update_user)
+        VALUES (#{categoryId},#{name},#{price},#{status},#{description},#{image},#{createTime},#{updateTime},#{createUser}, #{updateUser})
+    </insert>
+
+</mapper>
