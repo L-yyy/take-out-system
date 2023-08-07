@@ -42,8 +42,17 @@ sky:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+
+    #下面是用户端生成的JWT令牌，上面是管理端生成的JWT令牌
+    user-secret-key: itheima
+    user-ttl: 7200000
+    user-token-name: authentication
+
   alioss:
     endpoint: ${sky.alioss.endpoint} # 这里通过引用的方式来赋值，在我们的dev开发环境下给值
     access-key-id: ${sky.alioss.access-key-id}
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-name}
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}

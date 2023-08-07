@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+
 
 @RestController("userShopController")
 @Slf4j
 @Api(tags = "店铺相关接口")//必须要写tags= 否则swagger显示不出来
 @RequestMapping("/user/shop")
 public class ShopController {
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
     public static final String KEY = "SHOP_STATUS";

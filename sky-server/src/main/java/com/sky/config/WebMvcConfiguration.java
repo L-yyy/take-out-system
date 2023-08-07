@@ -1,6 +1,7 @@
 package com.sky.config;
 
 import com.sky.interceptor.JwtTokenAdminInterceptor;
+import com.sky.interceptor.JwtTokenUserInterceptor;
 import com.sky.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpMessage;
@@ -31,8 +32,12 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     //web层的配置类一般都会去继承WebMvcConfigurationSupport这个配置类，
     //现在要扩展Spring MVC框架的消息转化器，新增extendMessageConverters方法
 
+    //这是在注册我们写的登录JWT拦截器
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+    @Autowired
+    private JwtTokenUserInterceptor jwtTokenUserInterceptor;
+
 
     /**
      * 注册自定义拦截器
@@ -43,7 +48,12 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         log.info("开始注册自定义拦截器...");
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/employee/login");
+                .excludePathPatterns("/admin/employee/login");//排除登录请求
+
+        registry.addInterceptor(jwtTokenUserInterceptor)
+                .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/login")//排除登录请求
+                .excludePathPatterns("/user/user/status");//排除状态，因为我们还没登录状态就已经显示了
     }
 
     /**
