@@ -28,6 +28,13 @@ public interface OrderMapper {
     List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime orderTime);
 
     /**
+     * 根据订单id修改订单信息
+     * @param orders
+     */
+    void update(Orders orders);
+
+
+    /**
      * 历史订单分页查询
      * @param ordersPageQueryDTO
      * @return
@@ -41,4 +48,7 @@ public interface OrderMapper {
      */
     @Select("select * from orders where id=#{id}")
     Orders getById(Long id);
+
+
+
 }
