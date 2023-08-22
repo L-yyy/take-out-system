@@ -20,6 +20,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.AddressBookService;
 import com.sky.service.OrderService;
+import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
@@ -87,8 +88,8 @@ public class OrderServiceImpl implements OrderService {
         Orders orders = new Orders();
         BeanUtils.copyProperties(ordersSubmitDTO, orders);
         orders.setOrderTime(LocalDateTime.now());
-        orders.setPayStatus(Orders.PAID);//1.这里点击去支付后本该UN_PAID，现在模拟支付完成PAID
-        orders.setStatus(Orders.REFUND);//2.这里由PENDING_PAYMENT状态1，改为状态2来模拟
+        orders.setPayStatus(Orders.UN_PAID);//1.这里点击去支付后本该UN_PAID，现在模拟支付完成PAID(现在是非模拟)
+        orders.setStatus(Orders.PENDING_PAYMENT);//2.这里由PENDING_PAYMENT状态1，改为状态2来模拟(现在是非模拟)
         orders.setNumber(String.valueOf(System.currentTimeMillis()));
         orders.setPhone(addressBook.getPhone());
         orders.setConsignee(addressBook.getConsignee());
@@ -116,15 +117,6 @@ public class OrderServiceImpl implements OrderService {
                 .orderNumber(orders.getNumber())
                 .orderAmount(orders.getAmount())
                 .build();
-
-        //模拟支付成功
-        Map map = new HashMap();
-        map.put("type", 1);
-        map.put("orderId", orders.getId());
-        map.put("content", "订单号:" + orders.getNumber());
-
-        String json = JSON.toJSONString(map);
-        webSocketServer.sendToAllClient(json);
 
         return orderSubmitVO;
     }
@@ -459,6 +451,40 @@ public class OrderServiceImpl implements OrderService {
         orders.setDeliveryTime(LocalDateTime.now());
 
         orderMapper.update(orders);
+    }
+
+    /**
+     * 订单支付
+     * @param ordersPaymentDTO
+     * @return
+     */
+    @Override
+    public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) {
+
+        Orders ordersDB = orderMapper.getByOrderNumber(ordersPaymentDTO.getOrderNumber());
+
+        if (!ordersDB.getStatus().equals(Orders.PENDING_PAYMENT) || ordersDB == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .payStatus(Orders.PAID)
+                .status(Orders.TO_BE_CONFIRMED)
+                .build();
+
+        orderMapper.update(orders);
+
+        //模拟支付成功，提示语言播报
+        Map map = new HashMap();
+        map.put("type", 1);
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号:" + orders.getNumber());
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
+
+        return new OrderPaymentVO();
     }
 
 
