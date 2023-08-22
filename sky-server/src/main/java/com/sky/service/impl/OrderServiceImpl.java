@@ -487,5 +487,29 @@ public class OrderServiceImpl implements OrderService {
         return new OrderPaymentVO();
     }
 
+    /**
+     * 客户催单
+     * @param id
+     */
+    @Override
+    public void reminder(Long id) {
+
+        Orders ordersDB = orderMapper.getById(id);
+
+        if (ordersDB == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        //模拟支付成功，提示语言播报
+        Map map = new HashMap();
+        map.put("type", 2);//1.表示来单提醒，2表示客户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号:" + ordersDB.getNumber());
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
+
+    }
+
 
 }
