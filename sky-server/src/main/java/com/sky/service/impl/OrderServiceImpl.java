@@ -469,6 +469,7 @@ public class OrderServiceImpl implements OrderService {
 
         Orders orders = Orders.builder()
                 .id(ordersDB.getId())
+                .number(ordersDB.getNumber())
                 .payStatus(Orders.PAID)
                 .status(Orders.TO_BE_CONFIRMED)
                 .build();
